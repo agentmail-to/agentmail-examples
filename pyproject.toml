@@ -1,0 +1,12 @@
+[project]
+name = "agentmail-examples"
+version = "0.1.0"
+description = "AgentMail Examples"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "langchain-openai>=0.3.12",
+    "langchain>=0.3.23",
+    "agentmail-toolkit>=0.1.8",
+    "langgraph>=0.3.27",
+]
