@@ -1,5 +1,5 @@
 [project]
-name = "agentmail-openai-terminal-example"
+name = "agentmail-openai-terminal"
 version = "0.1.0"
 description = "AgentMail OpenAI terminal example"
 readme = "README.md"
