@@ -1,7 +1,7 @@
 [project]
-name = "agentmail-examples"
+name = "agentmail-langchain-terminal-example"
 version = "0.1.0"
-description = "AgentMail Examples"
+description = "AgentMail Langchain Terminal Example"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
