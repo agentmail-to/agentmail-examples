@@ -1,0 +1,13 @@
+[project]
+name = "agentmail-email-agent"
+version = "0.1.0"
+description = "AgentMail email agent example"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "agentmail-toolkit>=0.1.8",
+    "agents>=1.4.0",
+    "asyncio>=3.4.3",
+    "flask>=3.1.0",
+    "ngrok>=1.4.0",
+]
