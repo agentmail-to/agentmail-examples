@@ -1,13 +1,13 @@
 # Email Agent Example
 
-Build an agent that automatically replies to emails
+Build an agent that autonomously replies to incoming emails.
 
 ## Requirements
 
 - Python 3.11 or higher
 - [AgentMail API key](https://agentmail.io)
 - [OpenAI API key](https://platform.openai.com)
-- [Ngrok account](https://ngrok.com) to receive webhooks
+- [Ngrok account](https://ngrok.com) (for receiving webhooks)
 
 ## Setup
 
@@ -17,7 +17,7 @@ Build an agent that automatically replies to emails
 2. Get your Ngrok auth token
 3. Claim your free static domain
 
-This will create a persistent domain (your-subdomain.ngrok.io) that you can use to receive AgentMail webhooks.
+This will create a persistent domain (your-subdomain.ngrok-free.app) that you can use to receive AgentMail webhooks.
 
 ### Config
 
@@ -32,7 +32,7 @@ INBOX_USERNAME=your-inbox-username
 WEBHOOK_DOMAIN=your-webhook-domain
 ```
 
-Export enivornment variables in `.env` file
+Export enivornment variables in the `.env` file
 
 ```sh
 export $(grep -v '^#' .env | xargs)
@@ -40,7 +40,7 @@ export $(grep -v '^#' .env | xargs)
 
 ### AgentMail
 
-Create inbox
+Create an inbox
 
 ```sh
 curl -X POST https://api.agentmail.to/v0/inboxes \
@@ -52,7 +52,7 @@ curl -X POST https://api.agentmail.to/v0/inboxes \
 }"
 ```
 
-Create webhook
+Create a webhook
 
 ```sh
 curl -X POST https://api.agentmail.to/v0/webhooks \
@@ -79,4 +79,4 @@ Start the server
 python main.py
 ```
 
-Finally, send an email to `your-inbox-username@agentmail.to` and wait for a response.
+Now anyone can send emails to `your-inbox-username@agentmail.to` and receive automated responses.
