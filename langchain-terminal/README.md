@@ -1,6 +1,6 @@
-# Langchain Example
+# Langchain Terminal Example
 
-Simple terminal agent with email tools
+Simple terminal agent with AgentMail tools
 
 ## Setup
 
