@@ -36,6 +36,7 @@ name = "agentmail-email-agent"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "agentmail" },
     { name = "agentmail-toolkit" },
     { name = "agents" },
     { name = "asyncio" },
@@ -45,6 +46,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "agentmail", specifier = ">=0.0.19" },
     { name = "agentmail-toolkit", specifier = ">=0.1.8" },
     { name = "agents", specifier = ">=1.4.0" },
     { name = "asyncio", specifier = ">=3.4.3" },
