@@ -10,3 +10,4 @@ Build agents with email inboxes. Requires an [AgentMail](https://agentmail.io) A
 ### Advanced Examples
 
 1. [Email Agent](./email-agent) - Chat with an agent that responds autonomously via email
+2. [Sales Agent](./sales-agent) - An agent that sells products to prospects via email
