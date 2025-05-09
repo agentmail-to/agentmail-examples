@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "agentmail-toolkit>=0.1.8",
-    "agents>=1.4.0",
     "asyncio>=3.4.3",
+    "openai-agents>=0.0.9",
     "openai>=1.72.0",
 ]
