@@ -31,12 +31,10 @@ Click to watch Demo: Dev.to Sign up + Captcha Solving with 2Captcha and Agents b
 ## 🔗 Get Started
 
 **Full project with complete setup instructions:**
-�� **[https://github.com/hetpatel-11/AutoSign](https://github.com/hetpatel-11/AutoSign)**
+👉 **[https://github.com/hetpatel-11/AutoSign](https://github.com/hetpatel-11/AutoSign)**
+
+*Built by Het Patel at the YC AI Agents Hackathon* 🚀
 
 ## 🎉 Perfect for AgentMail Examples
 
 This demonstrates how developers can use **AgentMail** for email verification and **Browser-use** for web automation in real-world applications, making it ideal for showcasing both services' capabilities.
-
----
-
-*Built by Het Patel at the YC AI Agents Hackathon* 🚀
