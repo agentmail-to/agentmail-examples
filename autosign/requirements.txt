@@ -1,6 +1,0 @@
-browser-use>=0.6.1
-python-dotenv>=1.0.0
-requests>=2.31.0
-cryptography>=41.0.0
-flask>=2.3.0
-twilio>=8.0.0
