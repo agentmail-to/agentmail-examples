@@ -1,0 +1,86 @@
+[
+  {
+    "from_email": "sarah.chen@techcorp.com",
+    "from_name": "Sarah Chen",
+    "subject": "Q4 Budget Review Meeting - Tomorrow 2 PM",
+    "body": "Hi Team,\n\nJust a reminder that we have our Q4 budget review meeting scheduled for tomorrow at 2 PM in Conference Room B.\n\nPlease come prepared with:\n- Current spending reports\n- Projected expenses for next quarter\n- Any budget adjustment requests\n\nSee you there!\n\nBest,\nSarah",
+    "received_at": "2025-11-08T09:15:00"
+  },
+  {
+    "from_email": "mike.johnson@vendor.com",
+    "from_name": "Mike Johnson",
+    "subject": "URGENT: Server maintenance window tonight",
+    "body": "Hi,\n\nThis is urgent - we need to perform emergency maintenance on the production servers tonight from 11 PM - 3 AM EST.\n\nExpected downtime: 30 minutes\nAffected services: API, Web Dashboard\n\nPlease notify your team and update your status page.\n\nLet me know if you need to reschedule.\n\nMike Johnson\nSenior DevOps Engineer",
+    "received_at": "2025-11-08T10:30:00"
+  },
+  {
+    "from_email": "recruiting@company.com",
+    "from_name": "HR Team",
+    "subject": "New Employee Orientation - Next Monday",
+    "body": "Hello,\n\nWe're excited to welcome 3 new team members starting next Monday!\n\nOrientation Schedule:\n- 9:00 AM: Welcome & Company Overview\n- 10:30 AM: IT Setup\n- 12:00 PM: Team Lunch\n- 2:00 PM: Department Introductions\n\nPlease make time to introduce yourself to our new colleagues.\n\nBest,\nHR Team",
+    "received_at": "2025-11-08T11:00:00"
+  },
+  {
+    "from_email": "alex.rivera@client.com",
+    "from_name": "Alex Rivera",
+    "subject": "Feature Request: Multi-language Support",
+    "body": "Hi,\n\nOur international users have been requesting multi-language support for the dashboard. This would be a huge win for user adoption in EMEA and APAC regions.\n\nCan we schedule a call to discuss:\n1. Implementation timeline\n2. Languages to support initially\n3. Pricing impact\n\nI'm available next week Tuesday-Thursday.\n\nThanks!\nAlex",
+    "received_at": "2025-11-08T11:45:00"
+  },
+  {
+    "from_email": "noreply@github.com",
+    "from_name": "GitHub",
+    "subject": "[ProjectX] Pull Request #247: Fix authentication bug",
+    "body": "Pull Request #247 has been opened by john.doe\n\nFix authentication bug causing session timeouts\n\nChanges:\n- Updated session management logic\n- Added retry mechanism for token refresh\n- Fixed edge case in logout flow\n\n3 files changed, 127 insertions(+), 43 deletions(-)\n\nReview requested from: @tech-leads",
+    "received_at": "2025-11-08T12:20:00"
+  },
+  {
+    "from_email": "invoices@stripe.com",
+    "from_name": "Stripe",
+    "subject": "Invoice for November 2025 - $2,450.00",
+    "body": "Invoice #INV-2025-11-001\nAmount Due: $2,450.00\nDue Date: November 15, 2025\n\nServices:\n- API Requests: $1,200.00\n- Premium Support: $800.00\n- Additional Storage: $450.00\n\nPayment will be automatically charged to your card ending in 4242.\n\nView invoice: https://stripe.com/invoices/inv_abc123",
+    "received_at": "2025-11-08T13:00:00"
+  },
+  {
+    "from_email": "lisa.wong@marketing.com",
+    "from_name": "Lisa Wong",
+    "subject": "Campaign Performance Report - October",
+    "body": "Hi team,\n\nOctober campaign results are in!\n\nHighlights:\n✓ 45% increase in conversions\n✓ 28% lower cost per acquisition\n✓ Email open rate: 34% (industry avg: 21%)\n✓ Social media engagement up 67%\n\nTop performing channels:\n1. Email marketing\n2. LinkedIn ads\n3. Content marketing\n\nFull report attached. Let's discuss next week's strategy meeting.\n\nLisa",
+    "received_at": "2025-11-08T14:15:00"
+  },
+  {
+    "from_email": "security@company.com",
+    "from_name": "Security Team",
+    "subject": "ACTION REQUIRED: Security Training Completion",
+    "body": "Dear Team Member,\n\nOur records show you haven't completed the mandatory security awareness training.\n\nDeadline: November 15, 2025\nTime required: 45 minutes\nAccess: training.company.com\n\nTopics covered:\n- Phishing prevention\n- Password security\n- Data handling policies\n- Incident reporting\n\nPlease complete by the deadline to maintain system access.\n\nSecurity Team",
+    "received_at": "2025-11-08T14:45:00"
+  },
+  {
+    "from_email": "david.park@partner.com",
+    "from_name": "David Park",
+    "subject": "Partnership Proposal - Integration Opportunity",
+    "body": "Hi,\n\nI'm reaching out from PartnerTech regarding a potential integration between our platforms.\n\nWe have 50K+ users who frequently request your product's features. A native integration could benefit both our user bases.\n\nWould you be interested in exploring this? Happy to share:\n- User demographics\n- Technical specs\n- Revenue sharing models\n\nLet me know if you'd like to schedule an intro call.\n\nBest regards,\nDavid Park\nBD Manager, PartnerTech",
+    "received_at": "2025-11-08T15:30:00"
+  },
+  {
+    "from_email": "support@aws.amazon.com",
+    "from_name": "AWS Support",
+    "subject": "Your Support Case #12345678 - Resolved",
+    "body": "Hello,\n\nYour AWS Support case regarding EC2 instance performance has been resolved.\n\nIssue: High CPU utilization on production instances\nResolution: Upgraded instance type from t3.medium to t3.large\nStatus: Monitoring for 48 hours\n\nCurrent metrics show normal performance levels. We'll continue monitoring and close the case if no issues arise.\n\nCase ID: 12345678\nSeverity: Medium\nResolved by: Senior Cloud Engineer\n\nAWS Support Team",
+    "received_at": "2025-11-08T16:00:00"
+  },
+  {
+    "from_email": "events@industry.org",
+    "from_name": "Industry Conference",
+    "subject": "Early Bird Tickets: Tech Summit 2026",
+    "body": "Don't miss out on Tech Summit 2026!\n\nDates: March 15-17, 2026\nLocation: San Francisco, CA\n\nEarly bird pricing (ends Nov 30):\n- Individual: $899 (save $400)\n- Team of 5: $3,995 (save $2,000)\n\nFeatured speakers:\n- AI & Machine Learning track\n- Cloud Infrastructure\n- Cybersecurity\n- Product Management\n\n200+ sessions, 50+ workshops, networking events\n\nRegister: techsummit.com/register\nCode: EARLY2026",
+    "received_at": "2025-11-08T16:30:00"
+  },
+  {
+    "from_email": "jessica.thompson@legal.com",
+    "from_name": "Jessica Thompson",
+    "subject": "Contract Review - NDA with NewClient Corp",
+    "body": "Hi,\n\nI've reviewed the NDA with NewClient Corp. A few items need attention:\n\n1. Confidentiality period: They want 5 years, suggest 3 years\n2. Data handling clause needs clarification\n3. Termination conditions are one-sided\n\nRecommendations:\n- Modify Section 4.2 (data retention)\n- Add mutual termination clause\n- Clarify IP ownership in Section 7\n\nI've marked up the document. Let's discuss before we respond.\n\nJessica Thompson\nSenior Legal Counsel",
+    "received_at": "2025-11-08T16:45:00"
+  }
+]

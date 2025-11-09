@@ -1,0 +1,16 @@
+[project]
+name = "agentmail-email-summary-agent"
+version = "0.1.0"
+description = "AgentMail email summary agent - Daily AI-powered email summaries"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "agentmail>=0.0.19",
+    "flask>=3.1.0",
+    "pyngrok>=7.0.0",
+    "openai>=1.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.setuptools]
+py-modules = ["main", "summary_agent", "email_storage", "setup_inbox"]
