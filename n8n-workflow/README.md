@@ -15,3 +15,6 @@ This workflow automates two core AgentMail operations:
 - Error handling for API operations
 - Configurable inbox settings
 - Customizable email content
+
+- 
+<img width="1102" height="175" alt="Screenshot 2025-11-09 at 6 10 40 PM" src="https://github.com/user-attachments/assets/43211b73-9810-4d9b-ac5a-f929a432b950" />
