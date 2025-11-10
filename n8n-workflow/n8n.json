@@ -1,0 +1,317 @@
+{
+  "name": "AgentMail Inbox & Email Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "inbox_username",
+              "name": "inbox_username",
+              "type": "string",
+              "value": "my-agent"
+            },
+            {
+              "id": "inbox_domain",
+              "name": "inbox_domain",
+              "type": "string",
+              "value": "agentmail.to"
+            },
+            {
+              "id": "inbox_display_name",
+              "name": "inbox_display_name",
+              "type": "string",
+              "value": "My Agent Inbox"
+            },
+            {
+              "id": "recipient_email",
+              "name": "recipient_email",
+              "type": "string",
+              "value": "recipient@example.com"
+            },
+            {
+              "id": "email_subject",
+              "name": "email_subject",
+              "type": "string",
+              "value": "Hello from AgentMail n8n Workflow"
+            },
+            {
+              "id": "email_body",
+              "name": "email_body",
+              "type": "string",
+              "value": "Hello world"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "workflow-config",
+      "name": "Workflow Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        460,
+        300
+      ],
+      "notes": "Configure your inbox settings and email details here"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.agentmail.to/v0/inboxes",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "username",
+              "value": "={{ $json.inbox_username }}"
+            },
+            {
+              "name": "domain",
+              "value": "={{ $json.inbox_domain }}"
+            },
+            {
+              "name": "display_name",
+              "value": "={{ $json.inbox_display_name }}"
+            }
+          ]
+        },
+        "options": {
+          "bodyContentType": "json"
+        }
+      },
+      "id": "create-inbox",
+      "name": "Create AgentMail Inbox",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        300
+      ],
+      "notes": "Creates a new AgentMail inbox via API"
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "inbox_id",
+              "name": "inbox_id",
+              "type": "string",
+              "value": "={{ $json.inbox_id }}"
+            },
+            {
+              "id": "inbox_email",
+              "name": "inbox_email",
+              "type": "string",
+              "value": "={{ $json.inbox_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-inbox-id",
+      "name": "Extract Inbox Details",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        900,
+        300
+      ],
+      "notes": "Extracts inbox_id from the Create Inbox API response"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.agentmail.to/v0/inboxes/{{ encodeURIComponent($json.inbox_id) }}/messages/send",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "to",
+              "value": "={{ $('Workflow Configuration').item.json.recipient_email }}"
+            },
+            {
+              "name": "subject",
+              "value": "={{ $('Workflow Configuration').item.json.email_subject }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $('Workflow Configuration').item.json.email_body }}"
+            }
+          ]
+        },
+        "options": {
+          "bodyContentType": "json",
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "send-email",
+      "name": "Send Email via AgentMail",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        300
+      ],
+      "notes": "Sends an email from the created inbox using AgentMail API"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "status",
+              "value": "success"
+            },
+            {
+              "name": "message",
+              "value": "Email sent successfully!"
+            },
+            {
+              "name": "inbox_created",
+              "value": "={{ $('extract-inbox-id').item.json.inbox_email }}"
+            },
+            {
+              "name": "email_sent_to",
+              "value": "={{ $('workflow-config').item.json.recipient_email }}"
+            },
+            {
+              "name": "message_id",
+              "value": "={{ $json.message_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "success-response",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1340,
+        300
+      ],
+      "notes": "Formats the success response with all relevant details"
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Workflow Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Configuration": {
+      "main": [
+        [
+          {
+            "node": "Create AgentMail Inbox",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create AgentMail Inbox": {
+      "main": [
+        [
+          {
+            "node": "Extract Inbox Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Inbox Details": {
+      "main": [
+        [
+          {
+            "node": "Send Email via AgentMail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email via AgentMail": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-27T00:00:00.000Z",
+      "updatedAt": "2025-01-27T00:00:00.000Z",
+      "id": "agentmail",
+      "name": "AgentMail"
+    },
+    {
+      "createdAt": "2025-01-27T00:00:00.000Z",
+      "updatedAt": "2025-01-27T00:00:00.000Z",
+      "id": "email-automation",
+      "name": "Email Automation"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-27T00:00:00.000Z",
+  "versionId": "1"
+}
