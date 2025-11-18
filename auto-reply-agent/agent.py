@@ -15,6 +15,7 @@ from flask import Flask, request, Response
 import ngrok
 from agentmail import AgentMail
 from openai import OpenAI
+import threading
 
 # Configuration
 PORT = 8080
@@ -26,6 +27,8 @@ USE_AI_REPLY = os.getenv("USE_AI_REPLY", "false").lower() == "true"
 app = Flask(__name__)
 client = AgentMail()
 openai_client = OpenAI() if USE_AI_REPLY else None
+# contains processed message_id
+processed_messages = set()   
 
 
 def setup_agentmail():
@@ -58,6 +61,7 @@ def setup_agentmail():
         webhook = client.webhooks.create(
             url=f"{listener.url()}/webhook/agentmail",
             event_types=["message.received"],
+            inbox_ids=[inbox.inbox_id],
             client_id=f"{INBOX_USERNAME}-webhook"
         )
         print(f"✓ Webhook created")
@@ -146,25 +150,8 @@ def generate_ai_reply(sender_name, email_body, subject, thread_history=""):
         return generate_reply(sender_name, subject)
 
 
-@app.route('/webhook/agentmail', methods=['POST'])
-def receive_webhook():
-    """Webhook endpoint to receive incoming email notifications."""
-    payload = request.json
-    event_type = payload.get('type') or payload.get('event_type')
-
-    # Ignore outgoing messages
-    if event_type == 'message.sent':
-        return Response(status=200)
-
-    message = payload.get('message', {})
-    message_id = message.get('message_id')
-    inbox_id = message.get('inbox_id')
-    from_field = message.get('from_', '') or message.get('from', '')
-
-    # Validate required fields
-    if not message_id or not inbox_id or not from_field:
-        return Response(status=200)
-
+def process_and_reply(message_id, inbox_id, from_field, subject, thread_id, message):
+    """Process incoming message and send reply in background."""
     # Extract sender email and name
     if '<' in from_field and '>' in from_field:
         sender_email = from_field.split('<')[1].split('>')[0].strip()
@@ -175,11 +162,8 @@ def receive_webhook():
         sender_email = from_field.strip()
         sender_name = sender_email.split('@')[0].title() if '@' in sender_email else 'Friend'
 
-    subject = message.get('subject', '(no subject)')
-    thread_id = message.get('thread_id', '')
-
     # Log incoming email
-    print(f"Email from {sender_email}: {subject}")
+    print(f"Processing email from {sender_email}: {subject}")
 
     # Generate and send auto-reply
     try:
@@ -210,6 +194,42 @@ def receive_webhook():
         print(f"Auto-reply sent to {sender_email}\n")
     except Exception as e:
         print(f"Error: {e}\n")
+
+
+@app.route('/webhook/agentmail', methods=['POST'])
+def receive_webhook():
+    """Webhook endpoint to receive incoming email notifications."""
+    payload = request.json
+    event_type = payload.get('type') or payload.get('event_type')
+
+    # Ignore outgoing messages
+    if event_type == 'message.sent':
+        return Response(status=200)
+
+    message = payload.get('message', {})
+    message_id = message.get('message_id')
+    inbox_id = message.get('inbox_id')
+    from_field = message.get('from_', '') or message.get('from', '')
+
+    # Validate required fields
+    if not message_id or not inbox_id or not from_field:
+        return Response(status=200)
+
+    # prevent duplicate
+    if message_id in processed_messages:
+        return Response(status=200)
+    processed_messages.add(message_id)
+
+    subject = message.get('subject', '(no subject)')
+    thread_id = message.get('thread_id', '')
+
+    # Process in background thread and return immediately
+    thread = threading.Thread(
+        target=process_and_reply,
+        args=(message_id, inbox_id, from_field, subject, thread_id, message)
+    )
+    thread.daemon = True
+    thread.start()
 
     return Response(status=200)
 
