@@ -10,6 +10,9 @@ This is a simple example showing how to:
 import asyncio
 import os
 import re
+import json
+import websockets
+import websockets.exceptions
 from dotenv import load_dotenv
 from agentmail import AsyncAgentMail
 from openai import AsyncOpenAI
@@ -46,10 +49,9 @@ def extract_prospect_info(email_body):
     email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     emails = re.findall(email_pattern, email_body)
 
-    # Return first email that's not the manager
-    for email in emails:
-        if email not in email_body[:50]:  # Skip if in "From:" line
-            return email
+    # Return the first email found (should be the prospect's email in the message body)
+    if emails:
+        return emails[0]
     return None
 
 
@@ -84,15 +86,16 @@ async def send_email(inbox_id, to_email, subject, body):
         print(f"Error sending email: {e}")
 
 
-async def reply_to_email(inbox_id, message_id, body):
+async def reply_to_email(inbox_id, message_id, to_email, body):
     """Reply to an email"""
     try:
         await agentmail.inboxes.messages.reply(
             inbox_id=inbox_id,
             message_id=message_id,
+            to=[to_email],  # Required parameter for replies
             text=body
         )
-        print(f"✓ Sent reply")
+        print(f"✓ Sent reply to {to_email}")
     except Exception as e:
         print(f"Error replying: {e}")
 
@@ -106,11 +109,13 @@ async def handle_manager_email(inbox_id, message_id, from_email, subject, body):
 
     # Extract prospect email
     prospect_email = extract_prospect_info(body)
+    print(f"→ Extracted prospect email: {prospect_email}")
 
     if not prospect_email:
         await reply_to_email(
             inbox_id,
             message_id,
+            from_email,  # Reply back to the manager
             "I couldn't find a prospect email address. Please include it in your message."
         )
         return
@@ -134,6 +139,7 @@ async def handle_manager_email(inbox_id, message_id, from_email, subject, body):
     await reply_to_email(
         inbox_id,
         message_id,
+        from_email,  # Reply back to the manager
         f"✓ I've sent an introduction email to {prospect_email}.\n\nHere's what I sent:\n\n{sales_pitch}"
     )
 
@@ -170,7 +176,7 @@ async def handle_prospect_email(inbox_id, message_id, thread_id, from_email, sub
     prospect_response = await get_ai_response(conversations[thread_id], system_prompt)
 
     # Reply to prospect
-    await reply_to_email(inbox_id, message_id, prospect_response)
+    await reply_to_email(inbox_id, message_id, from_email, prospect_response)
 
     # Notify manager if strong intent signal
     if manager_email and intent in ['interested', 'not_interested']:
@@ -194,10 +200,10 @@ async def handle_new_email(message):
         inbox_id = message.get("inbox_id")
         message_id = message.get("message_id")
         thread_id = message.get("thread_id")
-        from_field = message.get("from", "")
+        from_field = message.get("from_") or message.get("from", "")  # Check both from_ and from
         from_email = extract_email(from_field)
         subject = message.get("subject", "")
-        body = message.get("text", "")
+        body = message.get("text", "") or message.get("body", "")
 
         print(f"\n{'='*60}")
         print(f"New email from: {from_email}")
@@ -217,6 +223,7 @@ async def handle_new_email(message):
 async def main():
     """Main WebSocket loop"""
     inbox_username = os.getenv("INBOX_USERNAME", "sales-agent")
+    websocket = None
 
     print(f"\n🚀 Sales Agent starting...")
     print(f"📬 Inbox: {inbox_username}@agentmail.to\n")
@@ -241,26 +248,68 @@ async def main():
 
     # Connect to WebSocket
     try:
-        async with agentmail.websockets.connect() as socket:
-            print(f"✓ Connected! Listening for emails...\n")
+        ws_url = "wss://ws.agentmail.to/v0"
+        api_key = os.getenv("AGENTMAIL_API_KEY")
 
-            # Subscribe to inbox
-            await socket.send({
-                "type": "subscribe",
-                "inbox_ids": [inbox_id]
-            })
+        websocket = await websockets.connect(
+            ws_url,
+            additional_headers={"Authorization": f"Bearer {api_key}"}
+        )
+        print(f"✓ Connected! Listening for emails...\n")
 
-            # Listen for messages
-            async for event in socket:
-                # Only process message.received events
-                if event.get("event_type") == "message.received":
-                    await handle_new_email(event.get("message", {}))
+        # Subscribe to inbox
+        subscribe_msg = {
+            "type": "subscribe",
+            "inbox_ids": [inbox_id]
+        }
+        await websocket.send(json.dumps(subscribe_msg))
+        print(f"✓ Subscribed to {inbox_id}")
 
-    except KeyboardInterrupt:
-        print("\n\n👋 Shutting down...")
+        # Listen for messages
+        async for message_raw in websocket:
+            event = json.loads(message_raw)
+
+            # For events with type="event", use event_type field
+            # For other events, use type field
+            if event.get("type") == "event":
+                event_type = event.get("event_type")
+            else:
+                event_type = event.get("type")
+
+            # Debug: Log ALL events (comment out in production)
+            # print(f"[DEBUG] Event received: type={event_type}")
+            # print(f"[DEBUG] Full event: {json.dumps(event, indent=2)[:500]}...")
+
+            # Log subscription confirmation
+            if event_type == "subscribed":
+                print(f"[Event: subscribed]\n")
+
+            # Process message.received events
+            if event_type == "message.received":
+                print(f"📨 New email received!")
+                await handle_new_email(event.get("message", {}))
+
+    except (KeyboardInterrupt, asyncio.CancelledError):
+        print("\n\n👋 Shutting down gracefully...")
+    except websockets.exceptions.ConnectionClosed:
+        print("\n⚠️ WebSocket connection closed")
     except Exception as e:
         print(f"WebSocket error: {e}")
+    finally:
+        # Clean up WebSocket connection
+        if websocket:
+            await websocket.close()
+            print("✓ WebSocket connection closed")
+
+
+def run():
+    """Run the main function with proper signal handling"""
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        # Handle KeyboardInterrupt at the top level
+        print("\n✓ Shutdown complete")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    run()
