@@ -31,9 +31,6 @@ openai = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 # Simple conversation history (thread_id -> messages)
 conversations = {}
 
-# Store manager email for notifications
-manager_email = None
-
 
 def extract_email(from_field):
     """Extract email address from 'Name <email@example.com>' format"""
@@ -105,9 +102,6 @@ async def reply_to_email(inbox_id, message_id, to_email, body):
 
 async def handle_manager_email(inbox_id, message_id, from_email, subject, body):
     """Handle email from sales manager - extract prospect and send sales pitch"""
-    global manager_email
-    manager_email = from_email  # Remember manager for future notifications
-
     print(f"\n📧 Email from MANAGER: {from_email}")
 
     # Extract prospect email
@@ -148,52 +142,25 @@ async def handle_manager_email(inbox_id, message_id, from_email, subject, body):
 
 
 async def handle_prospect_email(inbox_id, message_id, thread_id, from_email, subject, body):
-    """Handle email from prospect - answer questions and notify manager"""
+    """Handle email from prospect - track conversation and generate AI response"""
     print(f"\n📧 Email from PROSPECT: {from_email}")
 
-    # Get conversation history
+    # Track conversation history
     if thread_id not in conversations:
         conversations[thread_id] = []
-
     conversations[thread_id].append({"role": "user", "content": body})
 
-    # Determine intent
-    intent_keywords = {
-        'interested': ['interested', 'demo', 'meeting', 'tell me more', 'sounds good'],
-        'not_interested': ['not interested', 'no thank', 'not right now', 'maybe later'],
-        'question': ['?', 'how', 'what', 'when', 'why', 'can you']
-    }
-
-    body_lower = body.lower()
-    intent = 'question'  # default
-
-    for key, keywords in intent_keywords.items():
-        if any(keyword in body_lower for keyword in keywords):
-            intent = key
-            break
-
-    # Generate response
+    # Generate AI response
     system_prompt = """You are a helpful sales agent. Answer prospect questions professionally
     and helpfully. Keep responses brief (under 100 words). Be friendly but professional."""
 
-    prospect_response = await get_ai_response(conversations[thread_id], system_prompt)
+    response = await get_ai_response(conversations[thread_id], system_prompt)
 
     # Reply to prospect
-    await reply_to_email(inbox_id, message_id, from_email, prospect_response)
+    await reply_to_email(inbox_id, message_id, from_email, response)
 
-    # Notify manager if strong intent signal
-    if manager_email and intent in ['interested', 'not_interested']:
-        status = "showing interest" if intent == 'interested' else "not interested at this time"
-        await send_email(
-            inbox_id,
-            manager_email,
-            f"Update: {from_email}",
-            f"Prospect {from_email} is {status}.\n\nTheir message:\n{body}\n\nMy response:\n{prospect_response}"
-        )
-        print(f"→ Notified manager about prospect's {intent}")
-
-    # Update conversation
-    conversations[thread_id].append({"role": "assistant", "content": prospect_response})
+    # Update conversation history
+    conversations[thread_id].append({"role": "assistant", "content": response})
 
 
 async def handle_new_email(message):
@@ -226,26 +193,10 @@ async def handle_new_email(message):
 async def main():
     """Main WebSocket loop"""
     inbox_username = os.getenv("INBOX_USERNAME", "sales-agent")
+    inbox_id = f"{inbox_username}@agentmail.to"
 
     print(f"\n🚀 Sales Agent starting...")
-    print(f"📬 Inbox: {inbox_username}@agentmail.to\n")
-
-    # Create inbox (idempotent)
-    try:
-        inbox = await agentmail.inboxes.create(
-            username=inbox_username,
-            client_id=f"{inbox_username}-websocket-inbox"
-        )
-        inbox_id = inbox.inbox_id
-        print(f"✓ Inbox ready: {inbox_id}")
-    except Exception as e:
-        if "already exists" in str(e).lower():
-            inbox_id = f"{inbox_username}@agentmail.to"
-            print(f"✓ Using existing inbox: {inbox_id}")
-        else:
-            print(f"Error creating inbox: {e}")
-            return
-
+    print(f"📬 Inbox: {inbox_id}")
     print(f"✓ Connecting to AgentMail WebSocket...")
 
     # Create WebSocket client using SDK
@@ -264,57 +215,26 @@ async def main():
         async with ws_client.connect() as socket:
             print(f"✓ Connected! Listening for emails...\n")
 
-            # Subscribe to inbox using SDK's Subscribe type
+            # Subscribe to inbox
             subscribe_message = Subscribe(inbox_ids=[inbox_id])
             await socket.send_subscribe(subscribe_message)
-            print(f"✓ Subscribed to {inbox_id}")
 
-            # Listen for messages - handle SDK parsing errors for error responses
-            try:
-                async for event in socket:
-                    event_type_name = type(event).__name__
+            # Listen for events
+            async for event in socket:
+                if isinstance(event, Subscribed):
+                    print(f"✓ Subscribed to: {event.inbox_ids}\n")
 
-                    # Log subscription confirmation
-                    if isinstance(event, Subscribed):
-                        print(f"[Event: subscribed]\n")
-                        print(f"✓ Subscribed to inboxes: {event.inbox_ids}")
+                elif isinstance(event, MessageReceivedEvent):
+                    print(f"📨 New email received!")
+                    await handle_new_email(event.message)
 
-                    # Process message.received events
-                    elif isinstance(event, MessageReceivedEvent):
-                        print(f"📨 New email received!")
-                        await handle_new_email(event.message)
-
-                    # Log other events for debugging
-                    else:
-                        print(f"[Event: {event_type_name}]")
-
-            except Exception as parse_error:
-                # SDK can't parse error responses like "Inbox not found"
-                # This is expected when subscribing to non-existent inboxes
-                error_str = str(parse_error)
-                if "validation error" in error_str.lower():
-                    print(f"Note: WebSocket event parsing issue (this is OK)")
-                    print("Waiting for valid events...")
-                    # Keep connection alive to wait for valid events
-                    while True:
-                        await asyncio.sleep(60)
-                else:
-                    print(f"WebSocket error: {parse_error}")
-                    raise
-
-    except (KeyboardInterrupt, asyncio.CancelledError):
-        print("\n\n👋 Shutting down gracefully...")
     except Exception as e:
-        print(f"WebSocket error: {e}")
+        print(f"\n👋 Shutting down: {e}")
 
 
 def run():
-    """Run the main function with proper signal handling"""
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        # Handle KeyboardInterrupt at the top level
-        print("\n✓ Shutdown complete")
+    """Run the main function"""
+    asyncio.run(main())
 
 
 if __name__ == "__main__":
