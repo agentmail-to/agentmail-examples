@@ -195,8 +195,8 @@ async def main():
     inbox_username = os.getenv("INBOX_USERNAME", "sales-agent")
     inbox_id = f"{inbox_username}@agentmail.to"
 
-    print(f"\n🚀 Sales Agent starting...")
-    print(f"📬 Inbox: {inbox_id}")
+    print(f"\nSales Agent starting...")
+    print(f"Inbox: {inbox_id}")
     print(f"✓ Connecting to AgentMail WebSocket...")
 
     # Create WebSocket client using SDK
@@ -208,7 +208,7 @@ async def main():
         environment=AgentMailEnvironment.PRODUCTION,
         httpx_client=httpx.AsyncClient()
     )
-    ws_client = AsyncWebsocketsClient(client_wrapper=client_wrapper)
+    ws_client = AsyncWebsocketsClient()
 
     # Connect to WebSocket using SDK
     try:
@@ -228,13 +228,18 @@ async def main():
                     print(f"📨 New email received!")
                     await handle_new_email(event.message)
 
+    except (KeyboardInterrupt, asyncio.CancelledError):
+        print("\n\nShutting down gracefully...")
     except Exception as e:
-        print(f"\n👋 Shutting down: {e}")
+        print(f"\nError: {e}")
 
 
 def run():
     """Run the main function"""
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("\n✓ Shutdown complete")
 
 
 if __name__ == "__main__":
