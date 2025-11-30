@@ -8,5 +8,4 @@ dependencies = [
     "agentmail>=0.0.19",
     "openai>=1.0.0",
     "python-dotenv>=1.0.0",
-    "httpx>=0.24.0",
 ]

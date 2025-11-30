@@ -14,11 +14,8 @@ from dotenv import load_dotenv
 from agentmail import AsyncAgentMail
 from agentmail.websockets.client import AsyncWebsocketsClient
 from agentmail.websockets.types import Subscribe
-from agentmail.events.types.message_received_event import MessageReceivedEvent
 from agentmail.websockets.types.subscribed import Subscribed
-from agentmail.core.client_wrapper import AsyncClientWrapper
-from agentmail.environment import AgentMailEnvironment
-import httpx
+from agentmail.events.types.message_received_event import MessageReceivedEvent
 from openai import AsyncOpenAI
 
 # Load environment variables
@@ -30,6 +27,9 @@ openai = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # Simple conversation history (thread_id -> messages)
 conversations = {}
+
+# Store manager email for notifications
+manager_email = None
 
 
 def extract_email(from_field):
@@ -102,6 +102,9 @@ async def reply_to_email(inbox_id, message_id, to_email, body):
 
 async def handle_manager_email(inbox_id, message_id, from_email, subject, body):
     """Handle email from sales manager - extract prospect and send sales pitch"""
+    global manager_email
+    manager_email = from_email  # Remember manager for future notifications
+
     print(f"\n📧 Email from MANAGER: {from_email}")
 
     # Extract prospect email
@@ -142,13 +145,27 @@ async def handle_manager_email(inbox_id, message_id, from_email, subject, body):
 
 
 async def handle_prospect_email(inbox_id, message_id, thread_id, from_email, subject, body):
-    """Handle email from prospect - track conversation and generate AI response"""
+    """Handle email from prospect - track conversation, detect intent, and notify manager"""
     print(f"\n📧 Email from PROSPECT: {from_email}")
 
     # Track conversation history
     if thread_id not in conversations:
         conversations[thread_id] = []
     conversations[thread_id].append({"role": "user", "content": body})
+
+    # Detect prospect intent
+    intent_keywords = {
+        'interested': ['interested', 'demo', 'meeting', 'tell me more', 'sounds good'],
+        'not_interested': ['not interested', 'no thank', 'not right now', 'maybe later'],
+        'question': ['?', 'how', 'what', 'when', 'why', 'can you']
+    }
+
+    body_lower = body.lower()
+    intent = 'question'  # default
+    for key, keywords in intent_keywords.items():
+        if any(keyword in body_lower for keyword in keywords):
+            intent = key
+            break
 
     # Generate AI response
     system_prompt = """You are a helpful sales agent. Answer prospect questions professionally
@@ -158,6 +175,17 @@ async def handle_prospect_email(inbox_id, message_id, thread_id, from_email, sub
 
     # Reply to prospect
     await reply_to_email(inbox_id, message_id, from_email, response)
+
+    # Notify manager if strong intent signal
+    if manager_email and intent in ['interested', 'not_interested']:
+        status = "showing interest" if intent == 'interested' else "not interested at this time"
+        await send_email(
+            inbox_id,
+            manager_email,
+            f"Update: {from_email}",
+            f"Prospect {from_email} is {status}.\n\nTheir message:\n{body}\n\nMy response:\n{response}"
+        )
+        print(f"→ Notified manager about prospect's {intent}")
 
     # Update conversation history
     conversations[thread_id].append({"role": "assistant", "content": response})
@@ -199,25 +227,16 @@ async def main():
     print(f"Inbox: {inbox_id}")
     print(f"✓ Connecting to AgentMail WebSocket...")
 
-    # Create WebSocket client using SDK
-    api_key = os.getenv("AGENTMAIL_API_KEY")
+    # Create WebSocket client using the agentmail client's wrapper
+    ws_client = AsyncWebsocketsClient(client_wrapper=agentmail._client_wrapper)
 
-    # Create client wrapper with proper configuration
-    client_wrapper = AsyncClientWrapper(
-        api_key=api_key,
-        environment=AgentMailEnvironment.PRODUCTION,
-        httpx_client=httpx.AsyncClient()
-    )
-    ws_client = AsyncWebsocketsClient()
-
-    # Connect to WebSocket using SDK
+    # Connect to WebSocket
     try:
         async with ws_client.connect() as socket:
             print(f"✓ Connected! Listening for emails...\n")
 
             # Subscribe to inbox
-            subscribe_message = Subscribe(inbox_ids=[inbox_id])
-            await socket.send_subscribe(subscribe_message)
+            await socket.send_subscribe(Subscribe(inbox_ids=[inbox_id]))
 
             # Listen for events
             async for event in socket:
