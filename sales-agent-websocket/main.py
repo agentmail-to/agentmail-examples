@@ -4,7 +4,7 @@ Sales Agent using AgentMail WebSocket
 This is a simple example showing how to:
 - Connect to AgentMail via WebSocket for real-time email processing
 - Use OpenAI to handle sales conversations
-- Send emails to prospects and respond to replies
+- Send emails to customers and respond to replies
 """
 
 import asyncio
@@ -39,17 +39,17 @@ def extract_email(from_field):
 
 
 def is_from_manager(email_body):
-    """Simple check if email is from sales manager (contains prospect info)"""
-    keywords = ['prospect', 'lead', 'contact', 'reach out', 'email']
+    """Simple check if email is from sales manager (contains customer info)"""
+    keywords = ['customer', 'lead', 'contact', 'reach out', 'email']
     return any(keyword in email_body.lower() for keyword in keywords)
 
 
-def extract_prospect_info(email_body):
-    """Extract prospect email from manager's message"""
+def extract_customer_info(email_body):
+    """Extract customer email from manager's message"""
     email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     emails = re.findall(email_pattern, email_body)
 
-    # Return the first email found (should be the prospect's email in the message body)
+    # Return the first email found (should be the customer's email in the message body)
     if emails:
         return emails[0]
     return None
@@ -101,22 +101,22 @@ async def reply_to_email(inbox_id, message_id, to_email, body):
 
 
 async def handle_manager_email(inbox_id, message_id, from_email, subject, body):
-    """Handle email from sales manager - extract prospect and send sales pitch"""
+    """Handle email from sales manager - extract customer and send sales pitch"""
     global manager_email
     manager_email = from_email  # Remember manager for future notifications
 
     print(f"\n📧 Email from MANAGER: {from_email}")
 
-    # Extract prospect email
-    prospect_email = extract_prospect_info(body)
-    print(f"→ Extracted prospect email: {prospect_email}")
+    # Extract customer email
+    customer_email = extract_customer_info(body)
+    print(f"→ Extracted customer email: {customer_email}")
 
-    if not prospect_email:
+    if not customer_email:
         await reply_to_email(
             inbox_id,
             message_id,
             from_email,  # Reply back to the manager
-            "I couldn't find a prospect email address. Please include it in your message."
+            "I couldn't find a customer email address. Please include it in your message."
         )
         return
 
@@ -127,10 +127,10 @@ async def handle_manager_email(inbox_id, message_id, from_email, subject, body):
     messages = [{"role": "user", "content": f"Create a sales email based on this: {body}"}]
     sales_pitch = await get_ai_response(messages, system_prompt)
 
-    # Send email to prospect
+    # Send email to customer
     await send_email(
         inbox_id,
-        prospect_email,
+        customer_email,
         f"Introduction: {subject}" if subject else "Quick Introduction",
         sales_pitch
     )
@@ -140,20 +140,20 @@ async def handle_manager_email(inbox_id, message_id, from_email, subject, body):
         inbox_id,
         message_id,
         from_email,  # Reply back to the manager
-        f"✓ I've sent an introduction email to {prospect_email}.\n\nHere's what I sent:\n\n{sales_pitch}"
+        f"✓ I've sent an introduction email to {customer_email}.\n\nHere's what I sent:\n\n{sales_pitch}"
     )
 
 
-async def handle_prospect_email(inbox_id, message_id, thread_id, from_email, subject, body):
-    """Handle email from prospect - track conversation, detect intent, and notify manager"""
-    print(f"\n📧 Email from PROSPECT: {from_email}")
+async def handle_customer_email(inbox_id, message_id, thread_id, from_email, subject, body):
+    """Handle email from customer - track conversation, detect intent, and notify manager"""
+    print(f"\n📧 Email from CUSTOMER: {from_email}")
 
     # Track conversation history
     if thread_id not in conversations:
         conversations[thread_id] = []
     conversations[thread_id].append({"role": "user", "content": body})
 
-    # Detect prospect intent
+    # Detect customer intent
     intent_keywords = {
         'interested': ['interested', 'demo', 'meeting', 'tell me more', 'sounds good'],
         'not_interested': ['not interested', 'no thank', 'not right now', 'maybe later'],
@@ -168,12 +168,12 @@ async def handle_prospect_email(inbox_id, message_id, thread_id, from_email, sub
             break
 
     # Generate AI response
-    system_prompt = """You are a helpful sales agent. Answer prospect questions professionally
+    system_prompt = """You are a helpful sales agent. Answer customer questions professionally
     and helpfully. Keep responses brief (under 100 words). Be friendly but professional."""
 
     response = await get_ai_response(conversations[thread_id], system_prompt)
 
-    # Reply to prospect
+    # Reply to customer
     await reply_to_email(inbox_id, message_id, from_email, response)
 
     # Notify manager if strong intent signal
@@ -183,9 +183,9 @@ async def handle_prospect_email(inbox_id, message_id, thread_id, from_email, sub
             inbox_id,
             manager_email,
             f"Update: {from_email}",
-            f"Prospect {from_email} is {status}.\n\nTheir message:\n{body}\n\nMy response:\n{response}"
+            f"Customer {from_email} is {status}.\n\nTheir message:\n{body}\n\nMy response:\n{response}"
         )
-        print(f"→ Notified manager about prospect's {intent}")
+        print(f"→ Notified manager about customer's {intent}")
 
     # Update conversation history
     conversations[thread_id].append({"role": "assistant", "content": response})
@@ -208,11 +208,11 @@ async def handle_new_email(message):
         print(f"Subject: {subject}")
         print(f"{'='*60}")
 
-        # Determine if from manager or prospect
+        # Determine if from manager or customer
         if is_from_manager(body):
             await handle_manager_email(inbox_id, message_id, from_email, subject, body)
         else:
-            await handle_prospect_email(inbox_id, message_id, thread_id, from_email, subject, body)
+            await handle_customer_email(inbox_id, message_id, thread_id, from_email, subject, body)
 
     except Exception as e:
         print(f"Error handling email: {e}")
