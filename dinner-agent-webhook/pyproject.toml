@@ -1,0 +1,12 @@
+[project]
+name = "dinner-agent-webhook-example"
+version = "0.1.0"
+description = "Simple dinner organizer using AgentMail Webhook API"
+requires-python = ">=3.11"
+
+dependencies = [
+    "agentmail",
+    "flask",
+    "python-dotenv",
+    "pyngrok",
+]
