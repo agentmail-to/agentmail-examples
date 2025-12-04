@@ -32,7 +32,7 @@ client = AgentMail(api_key=os.getenv("AGENTMAIL_API_KEY"))
 
 # Configuration
 INBOX_USERNAME = os.getenv("INBOX_USERNAME", "dinner-agent")
-NGROK_DOMAIN = os.getenv("NGROK_DOMAIN")
+NGROK_DOMAIN = os.getenv("NGROK_DOMAIN") or os.getenv("WEBHOOK_DOMAIN")
 MIN_CONFIRMATIONS = int(os.getenv("MIN_CONFIRMATIONS", "3"))
 PORT = int(os.getenv("PORT", "8080"))
 
