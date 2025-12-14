@@ -5,7 +5,10 @@ description = "Simple sales agent example using AgentMail WebSocket API"
 requires-python = ">=3.11"
 
 dependencies = [
-    "agentmail>=0.0.19",
+    "agentmail",
     "openai>=1.0.0",
     "python-dotenv>=1.0.0",
 ]
+
+[tool.uv.sources]
+agentmail = { path = "../../agentmail-python", editable = true }

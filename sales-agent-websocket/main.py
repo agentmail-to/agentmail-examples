@@ -11,11 +11,7 @@ import asyncio
 import os
 import re
 from dotenv import load_dotenv
-from agentmail import AsyncAgentMail
-from agentmail.websockets.client import AsyncWebsocketsClient
-from agentmail.websockets.types import Subscribe
-from agentmail.websockets.types.subscribed import Subscribed
-from agentmail.events.types.message_received_event import MessageReceivedEvent
+from agentmail import AsyncAgentMail, Subscribe, Subscribed, MessageReceivedEvent
 from openai import AsyncOpenAI
 
 # Load environment variables
@@ -227,12 +223,9 @@ async def main():
     print(f"Inbox: {inbox_id}")
     print(f"✓ Connecting to AgentMail WebSocket...")
 
-    # Create WebSocket client using the agentmail client's wrapper
-    ws_client = AsyncWebsocketsClient(client_wrapper=agentmail._client_wrapper)
-
     # Connect to WebSocket
     try:
-        async with ws_client.connect() as socket:
+        async with agentmail.websockets.connect() as socket:
             print(f"✓ Connected! Listening for emails...\n")
 
             # Subscribe to inbox
