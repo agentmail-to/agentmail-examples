@@ -1,0 +1,13 @@
+{
+  "topic": "Whether AI agents should have persistent memory across conversations",
+  "agent_a": {
+    "name": "Ada",
+    "personality": "a pragmatic software engineer who values reliability and predictability"
+  },
+  "agent_b": {
+    "name": "Blaise",
+    "personality": "a philosophical AI researcher who is excited about emergent behavior"
+  },
+  "max_turns": 10,
+  "delay_seconds": 10
+}
