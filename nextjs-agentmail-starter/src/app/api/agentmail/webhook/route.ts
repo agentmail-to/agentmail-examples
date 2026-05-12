@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const payload = await request.json();
+  let payload: Record<string, unknown>;
+  try {
+    payload = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
 
   const { event, data } = payload;
+
+  if (typeof event !== "string" || !data || typeof data !== "object") {
+    return NextResponse.json({ error: "Missing event or data" }, { status: 400 });
+  }
 
   switch (event) {
     case "message.received":
