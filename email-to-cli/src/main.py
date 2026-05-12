@@ -13,7 +13,10 @@ POLL_INTERVAL = int(os.environ.get("POLL_INTERVAL_SECONDS", "10"))
 
 
 def is_command_allowed(command: str) -> bool:
-    parts = shlex.split(command)
+    try:
+        parts = shlex.split(command)
+    except ValueError:
+        return False
     if not parts:
         return False
     base_cmd = parts[0]
@@ -79,7 +82,7 @@ def handle_messages(inbox_id: str):
             agentmail.messages.reply(
                 inbox_id=inbox_id,
                 message_id=msg.id,
-                text=f"Command not allowed: {shlex.split(command)[0]}\n\nAllowed commands: {', '.join(ALLOWED_COMMANDS)}",
+                text=f"Command not allowed: {command}\n\nAllowed commands: {', '.join(ALLOWED_COMMANDS)}",
             )
             agentmail.messages.update(
                 inbox_id=inbox_id,
