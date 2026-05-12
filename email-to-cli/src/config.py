@@ -12,7 +12,6 @@ ALLOWED_COMMANDS = [
     "tail",
     "wc",
     "echo",
-    "env",
     "uname",
     "ps",
 ]
