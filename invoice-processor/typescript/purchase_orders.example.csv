@@ -1,0 +1,6 @@
+po_number,vendor_name,amount,currency,description,status
+PO-2026-0001,Acme Corp,1499.00,USD,Annual SaaS subscription renewal,open
+PO-2026-0002,Bright Ink Studio,3500.00,USD,Q2 design retainer,open
+PO-2026-0003,Cloud Compute Inc,8200.00,USD,Monthly cloud hosting March,open
+PO-2026-0004,Digital Tools Ltd,12000.00,USD,Annual security audit,open
+PO-2026-0005,Express Logistics,650.00,USD,April warehouse fulfillment,open

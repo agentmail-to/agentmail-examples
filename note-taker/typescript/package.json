@@ -1,0 +1,31 @@
+{
+  "name": "agentmail-note-taker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Personal Note Taker — emails become Markdown notes with extracted action items, searchable via tool use. Built on AgentMail + Claude.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agentmail-to/agentmail-note-taker",
+    "directory": "typescript"
+  },
+  "license": "MIT",
+  "scripts": {
+    "start": "tsx src/agent.ts",
+    "dev": "tsx watch src/agent.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.91.0",
+    "agentmail": "^0.4.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

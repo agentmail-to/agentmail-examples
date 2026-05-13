@@ -1,0 +1,31 @@
+{
+  "_comment": "Configure who/what to watch + which Slack channel + (for hot replies) which rep gets the DM. The agent reads this file on each iteration so edits take effect without a restart.",
+
+  "deal_owners": {
+    "_comment": "Map a domain or vendor name to the Slack member ID of the rep who owns it. Used for hot-reply DMs. Find member IDs in Slack profile -> ... -> Copy member ID.",
+    "acme.com": "U01EXAMPLE1",
+    "bigco.com": "U01EXAMPLE2"
+  },
+
+  "watchlist_domains": [
+    "acme.com",
+    "bigco.com",
+    "strategicpartner.io"
+  ],
+
+  "watchlist_keywords": [
+    "renewal",
+    "RFP",
+    "RFQ",
+    "procurement",
+    "contract terms",
+    "legal review"
+  ],
+
+  "crm_notification_senders": [
+    "noreply@stripe.com",
+    "notifications@hubspot.com",
+    "noreply@salesforce.com",
+    "billing@chargebee.com"
+  ]
+}

@@ -1,1 +1,42 @@
+# Secrets + per-run state
 .env
+.agent_state.json
+.notifications.json
+.last_digest
+
+# Per-template runtime files — keep .example.* alongside them
+approval_types.yaml
+requests.csv
+gtm_log.csv
+prospects.csv
+ticket_log.csv
+deal.json
+vendors.csv
+payments.csv
+watchlist.json
+newsletter_cache.json
+invoices.json
+invoice_log.csv
+signals.csv
+actions.csv
+reservations.json
+.wallet
+
+# Notes (note-taker writes here)
+note-taker/python/notes/
+note-taker/typescript/notes/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+
+# OS
+.DS_Store

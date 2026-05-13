@@ -20,6 +20,49 @@ Build AI agents with their own email inboxes. Requires an [AgentMail](https://ag
 | [Dinner Agent](./dinner-agent) | Agent that coordinates dinner plans via email |
 | [GitHub Maintainer Agent](./github-maintainer-agent) | Agent that manages GitHub issues and PRs via email |
 
+### Templates
+
+Production-ready agent templates. Each has matching Python + TypeScript implementations and is tested end-to-end against real AgentMail + Claude APIs. Featured at [agentmail.to/build/templates](https://agentmail.to/build/templates).
+
+**Productivity**
+
+| Example | Description |
+|---|---|
+| [Scheduling Agent](./scheduling-agent) | Books meetings via email with calendar invite (.ics) attachments |
+| [Inbox Zero](./inbox-zero) | Drafts replies, flags what needs you, sends a morning digest |
+| [Note Taker](./note-taker) | Forward emails — they become Markdown notes you can search |
+| [Approval Inbox](./approval-inbox) | Your inbox is your approval queue. Configure once, approve everything from email |
+
+**Sales & Outbound**
+
+| Example | Description |
+|---|---|
+| [GTM Agent](./gtm-agent) | Cold outbound + warm-reply handoff to your sales team |
+| [Sales Signal Router](./sales-signal-router) | Triage inbound sales mail. Ping Slack. EOD digest |
+| [Negotiation Agent](./negotiation-agent) | Multi-party negotiator for used cars, apartments, B2B contracts |
+
+**Support**
+
+| Example | Description |
+|---|---|
+| [Support Agent](./support-agent) | Auto-respond to support tickets, escalate when stuck |
+| [Docs Assistant](./docs-assistant) | Answers product questions by web-searching your docs (cited) |
+
+**Finance**
+
+| Example | Description |
+|---|---|
+| [Invoice Processor](./invoice-processor) | Claude PDF vision extracts invoices, matches POs, auto-approves under limit |
+| [x402 Payment Agent](./x402-payment-agent) | Vendor invoices land in inbox. Allowlisted vendors auto-pay via x402 |
+
+**Marketing & Personal**
+
+| Example | Description |
+|---|---|
+| [Newsletter Digest](./newsletter-digest) | Summarizes daily newsletter blasts into one morning digest |
+| [Dinner Reservation](./dinner-reservation) | Books dinner reservations end-to-end (2-thread orchestration) |
+| [Browser Signup Agent](./browser-signup-agent) | Sign up for anything on the web + handle OTP / verification links |
+
 ## Quick Start
 
 ```bash
@@ -34,6 +77,14 @@ export AGENTMAIL_API_KEY=am_us_xxx
 cd email-agent
 pip install -r requirements.txt
 python main.py
+```
+
+To pull just one template (without the whole monorepo):
+
+```bash
+npx degit agentmail-to/agentmail-examples/sales-signal-router my-signal-router
+cd my-signal-router/python
+pip install -r requirements.txt && python agent.py
 ```
 
 ## Links

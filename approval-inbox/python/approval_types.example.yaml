@@ -1,0 +1,60 @@
+# approval_types.yaml — defines the request types this inbox handles.
+#
+# For each type:
+#   - description: explains the type to the classifier (Claude reads this)
+#   - classifier_hints: senders / keywords that suggest this type (advisory only;
+#     Claude still reads the body)
+#   - extract_fields: keys the agent extracts and includes in the review email
+#   - approve / decline: side-effect actions to fire on user reply
+#
+# Side-effect actions supported (any combination):
+#   forward_to: an email address — forwards the original email
+#   webhook:    a URL — POSTs the request JSON
+#   reply_to_sender: a string — sends as a reply to the original sender's thread
+#                    (supports {field_name} interpolation)
+
+types:
+  - type: vendor_invoice
+    description: An invoice from a vendor for goods or services rendered.
+    classifier_hints:
+      senders: [stripe.com, quickbooks.com, freshbooks.com, billing@*]
+      keywords: [invoice, "amount due", "payment due", "bill from", "remit payment"]
+    extract_fields: [vendor, amount_usd, currency, due_date, invoice_number]
+    approve:
+      forward_to: ap@yourcompany.com
+    decline:
+      reply_to_sender: |
+        Hi,
+
+        We're disputing this invoice and won't process payment as-is. Please send a corrected version, or contact ap@yourcompany.com if there's a question on terms.
+
+        Thanks.
+
+  - type: expense_report
+    description: An expense reimbursement claim from an employee or via Brex/Ramp.
+    classifier_hints:
+      senders: [brex.com, ramp.com, expensify.com]
+      keywords: [expense, reimbursement, "submitted for approval", "T&E"]
+    extract_fields: [employee, amount_usd, category, vendor, date]
+    approve:
+      forward_to: finance@yourcompany.com
+    decline:
+      reply_to_sender: "Declining this expense submission. Please attach a clearer receipt and resubmit."
+
+  - type: refund_request
+    description: A customer asking for a refund.
+    classifier_hints:
+      keywords: [refund, "money back", "charge back", "cancel my order"]
+    extract_fields: [customer_email, amount_usd, order_id, reason]
+    approve:
+      reply_to_sender: |
+        Hi,
+
+        Approved your refund request. The refund of {amount_usd} {currency} will appear on your card within 5-10 business days.
+
+        Reference: {order_id}
+    decline:
+      reply_to_sender: |
+        Hi,
+
+        We're unable to process this refund. {reason} doesn't qualify under our refund policy. Reach out if you have questions.
