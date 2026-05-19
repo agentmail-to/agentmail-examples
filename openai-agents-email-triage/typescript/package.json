@@ -1,0 +1,18 @@
+{
+  "name": "openai-agents-email-triage",
+  "version": "1.0.0",
+  "description": "Email triage agent built with OpenAI Agents SDK and AgentMail",
+  "scripts": {
+    "start": "tsx src/agent.ts"
+  },
+  "dependencies": {
+    "@openai/agents": "^0.1.0",
+    "agentmail": "^1.0.0",
+    "dotenv": "^16.4.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.5.0"
+  }
+}
