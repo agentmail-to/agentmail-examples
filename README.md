@@ -85,6 +85,43 @@ To pull just one template (without the whole monorepo):
 npx degit agentmail-to/agentmail-examples/sales-signal-router my-signal-router
 cd my-signal-router/python
 pip install -r requirements.txt && python agent.py
+
+### Template Agents
+ 
+Production-shaped reference agents. Each lives in its own subfolder and can be pulled
+out as a standalone project in one command:
+ 
+```bash
+npx degit agentmail-to/agentmail-examples/<template-name> my-new-app
+```
+ 
+| Template | What it does |
+|---|---|
+| [agentmail-approval-inbox](./agentmail-approval-inbox) | Human-in-the-loop approval flow for agent actions |
+| [agentmail-browser-signup-agent](./agentmail-browser-signup-agent) | Browser agent that handles email signups end-to-end |
+| [agentmail-dinner-reservation](./agentmail-dinner-reservation) | Concierge agent that books restaurant tables via email |
+| [agentmail-docs-assistant](./agentmail-docs-assistant) | Answers questions about your docs over email |
+| [agentmail-gtm-agent](./agentmail-gtm-agent) | Go-to-market outreach agent |
+| [agentmail-inbox-zero](./agentmail-inbox-zero) | Triage and zero out an overloaded inbox |
+| [agentmail-invoice-processor](./agentmail-invoice-processor) | Parses invoices from email and routes them |
+| [agentmail-negotiation-agent](./agentmail-negotiation-agent) | Negotiates via email on your behalf |
+| [agentmail-newsletter-digest](./agentmail-newsletter-digest) | Summarizes newsletter subscriptions into a digest |
+| [agentmail-note-taker](./agentmail-note-taker) | Captures and organizes notes from email threads |
+| [agentmail-sales-signal-router](./agentmail-sales-signal-router) | Routes inbound sales signals to the right person |
+| [agentmail-scheduling-agent](./agentmail-scheduling-agent) | Schedules meetings via email |
+| [agentmail-support-agent](./agentmail-support-agent) | Customer support agent over email |
+| [agentmail-x402-payment-agent](./agentmail-x402-payment-agent) | Handles x402 payments via email |
+| [collections-agent](./collections-agent) | Polite, persistent collections follow-up |
+| [contract-redline-agent](./contract-redline-agent) | Redlines contracts received via email |
+| [cold-email-researcher](./cold-email-researcher) | Research + cold outreach in one loop |
+| [hiring-screener-agent](./hiring-screener-agent) | Screens inbound applicants |
+| [legal-intake-agent](./legal-intake-agent) | Intake form-via-email for legal practices |
+| [podcast-booking-agent](./podcast-booking-agent) | Books podcast guests / appearances |
+| [receipt-parser-agent](./receipt-parser-agent) | Extracts receipt data from forwarded email |
+| [recruiter-coordinator](./recruiter-coordinator) | Coordinates candidate scheduling with recruiters |
+ 
+> Looking for the previous repo URLs? They're archived but still accessible -
+> the contents now live in this monorepo.
 ```
 
 ## Links
