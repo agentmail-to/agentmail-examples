@@ -1,0 +1,15 @@
+.env
+.agent_state.json
+
+# Runtime state — keep .example files
+approval_types.yaml
+requests.csv
+
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+node_modules/
+dist/
+.DS_Store
