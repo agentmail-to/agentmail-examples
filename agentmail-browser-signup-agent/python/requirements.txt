@@ -1,0 +1,4 @@
+browser-use>=0.8.0
+agentmail>=0.4.0
+anthropic>=0.91.0
+python-dotenv>=1.0.0
