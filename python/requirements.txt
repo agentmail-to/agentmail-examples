@@ -1,0 +1,4 @@
+agentmail>=0.0.30
+anthropic>=0.40.0
+python-dotenv>=1.0.0
+PyYAML>=6.0
