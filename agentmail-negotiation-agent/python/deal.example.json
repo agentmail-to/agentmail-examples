@@ -1,0 +1,19 @@
+{
+  "what": "2024 Toyota RAV4 XLE Premium AWD",
+  "must_haves": [
+    "AWD",
+    "XLE Premium trim or higher",
+    "less than 10,000 miles if used",
+    "no prior accidents",
+    "white or silver exterior"
+  ],
+  "ideal_price": 36000,
+  "max_price": 39500,
+  "currency": "USD",
+  "deal_context": "Trade-in: 2018 Honda Civic LX with 65,000 miles, clean title. Financing pre-approved through local credit union at 5.9%. Need delivery by end of next week. Within 50-mile radius of Brooklyn, NY.",
+  "counterparties": [
+    {"email": "sales@dealera.example.com", "name": "Dealer A"},
+    {"email": "fleet@dealerb.example.com", "name": "Dealer B"},
+    {"email": "internet@dealerc.example.com", "name": "Dealer C"}
+  ]
+}
