@@ -1,0 +1,10 @@
+[
+  {"area": "Liability", "requirement": "Liability capped at 12 months of fees paid. No unlimited liability."},
+  {"area": "Termination", "requirement": "Either party can terminate with 30 days written notice."},
+  {"area": "Auto-renewal", "requirement": "No auto-renewal. Contract requires explicit renewal."},
+  {"area": "IP ownership", "requirement": "We retain ownership of all pre-existing IP. Work product IP transfers on final payment."},
+  {"area": "Non-compete", "requirement": "No non-compete clauses. Non-solicitation limited to 12 months."},
+  {"area": "Payment terms", "requirement": "Net 30 payment terms. No upfront payment exceeding 25% of total."},
+  {"area": "Indemnification", "requirement": "Mutual indemnification only. No one-sided indemnity clauses."},
+  {"area": "Governing law", "requirement": "Governed by Delaware law. Disputes resolved by arbitration."}
+]
