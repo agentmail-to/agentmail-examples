@@ -1,0 +1,26 @@
+{
+  "personal-injury": {
+    "name": "Jane Smith",
+    "email": "jsmith@firm.example.com"
+  },
+  "employment": {
+    "name": "Bob Johnson",
+    "email": "bjohnson@firm.example.com"
+  },
+  "contract": {
+    "name": "Alice Davis",
+    "email": "adavis@firm.example.com"
+  },
+  "family": {
+    "name": "Carlos Rivera",
+    "email": "crivera@firm.example.com"
+  },
+  "criminal": {
+    "name": "Diana Chen",
+    "email": "dchen@firm.example.com"
+  },
+  "other": {
+    "name": "Jane Smith",
+    "email": "jsmith@firm.example.com"
+  }
+}
