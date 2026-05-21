@@ -1,0 +1,3 @@
+name,email,amount,due_date,invoice_id
+Alice Brown,alice@example.com,1500.00,2025-04-15,INV-001
+Charlie Davis,charlie@example.com,3200.00,2025-04-01,INV-002

@@ -1,0 +1,33 @@
+{
+  "name": "agentmail-browser-signup-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser Signup Agent (TypeScript) — Playwright drives the form, AgentMail receives the verification email, Claude extracts the OTP / link, Playwright completes verification.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agentmail-to/agentmail-browser-signup-agent",
+    "directory": "typescript"
+  },
+  "license": "MIT",
+  "scripts": {
+    "start": "tsx src/agent.ts",
+    "dev": "tsx watch src/agent.ts",
+    "build": "tsc",
+    "install-browsers": "playwright install chromium"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.91.0",
+    "agentmail": "^0.4.0",
+    "dotenv": "^16.4.5",
+    "playwright": "^1.49.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

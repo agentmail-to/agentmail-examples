@@ -1,0 +1,16 @@
+.env
+.agent_state.json
+
+# Runtime state — keep .example files
+watchlist.json
+signals.csv
+.last_digest
+
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+node_modules/
+dist/
+.DS_Store

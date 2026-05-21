@@ -1,0 +1,4 @@
+email,name,role,company,hook,status,first_touch_at,followup_at,replied_at,classification,thread_id
+jane.doe@example.com,Jane Doe,Head of Growth,Acme Inc,Acme just announced a Series B and is hiring 5 sales reps,queued,,,,,
+sam.lee@example.io,Sam Lee,VP Engineering,Beta Corp,Beta launched Beta Cloud last month and is migrating from a legacy stack,queued,,,,,
+ali.kim@example.com,Ali Kim,Founder,Gamma Labs,Gamma just raised seed and is launching their AI agents product publicly next month,queued,,,,,
