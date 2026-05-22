@@ -119,6 +119,12 @@ npx degit agentmail-to/agentmail-examples/<template-name> my-new-app
 | [podcast-booking-agent](./podcast-booking-agent) | Books podcast guests / appearances |
 | [receipt-parser-agent](./receipt-parser-agent) | Extracts receipt data from forwarded email |
 | [recruiter-coordinator](./recruiter-coordinator) | Coordinates candidate scheduling with recruiters |
+| [agent-pen-pal](./agent-pen-pal) | Pen-pal agent that maintains long-running email correspondences |
+| [agentmail-mastra-template](./agentmail-mastra-template) | Mastra framework template for AgentMail agents |
+| [ai-email-agent-template](./ai-email-agent-template) | Replit-ready AgentMail + OpenAI starter — fork and run |
+| [cc-the-agent](./cc-the-agent) | CC an agent on any thread to have it act on the conversation |
+| [nextjs-agentmail-starter](./nextjs-agentmail-starter) | Next.js starter project wired up with AgentMail |
+| [voice-to-email](./voice-to-email) | Records voice, transcribes via Whisper, sends as email |
  
 > Looking for the previous repo URLs? They're archived but still accessible -
 > the contents now live in this monorepo.
