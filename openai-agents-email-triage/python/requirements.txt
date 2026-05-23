@@ -1,0 +1,3 @@
+agentmail
+openai-agents
+python-dotenv
