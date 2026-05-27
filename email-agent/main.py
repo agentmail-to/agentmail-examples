@@ -49,7 +49,7 @@ Body:\n{email["text"]}
     response = asyncio.run(Runner.run(agent, prompt))
     print("Response:\n\n", response.final_output, "\n")
 
-    client.messages.reply(inbox_id=inbox, message_id=email["message_id"], text=response.final_output)
+    client.inboxes.messages.reply(inbox_id=inbox, message_id=email["message_id"], text=response.final_output)
 
 
 if __name__ == "__main__":

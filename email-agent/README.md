@@ -59,7 +59,8 @@ curl -X POST https://api.agentmail.to/v0/webhooks \
      -H "Authorization: Bearer $AGENTMAIL_API_KEY" \
      -H "Content-Type: application/json" \
      -d "{
-  \"url\": \"https://$WEBHOOK_DOMAIN/webhooks\"
+  \"url\": \"https://$WEBHOOK_DOMAIN/webhooks\",
+  \"event_types\": [\"message_received\"]
 }"
 ```
 
