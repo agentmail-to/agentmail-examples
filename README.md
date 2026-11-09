@@ -19,6 +19,7 @@ Build AI agents with their own email inboxes. Requires an [AgentMail](https://ag
 | [Sales Agent](./sales-agent) | Agent that sells products to prospects via email |
 | [Dinner Agent](./dinner-agent) | Agent that coordinates dinner plans via email |
 | [GitHub Maintainer Agent](./github-maintainer-agent) | Agent that manages GitHub issues and PRs via email |
+| [Verified Outreach](./verified-outreach) | Verifies each prospect with MailVeri before sending, skips bad addresses, logs every decision |
 
 ### Templates
 
