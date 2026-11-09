@@ -1,0 +1,24 @@
+{
+  "name": "agentmail-verified-outreach",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Verified Outreach - verify each prospect with MailVeri before an AgentMail inbox sends the first touch.",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsx src/agent.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "agentmail": "^0.4.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
