@@ -9,6 +9,7 @@ approval_types.yaml
 requests.csv
 gtm_log.csv
 prospects.csv
+verify_log.csv
 ticket_log.csv
 deal.json
 vendors.csv
